@@ -1,23 +1,60 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import MaterialTable from "material-table";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [tableData, setTableData] = useState("");
+  console.log(tableData);
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((response) => response.json())
+      .then((json) => {
+        setTableData(json);
+      });
+  }, []);
+
+  const columns = [
+    {
+      title: "Name",
+      field: "name",
+    },
+    {
+      title: "Username",
+      field: "username",
+    },
+    {
+      title: "Email",
+      field: "email",
+    },
+    {
+      title: "Phone",
+      field: "phone",
+    },
+    {
+      title: "Website",
+      field: "website",
+    },
+  ];
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {tableData ? (
+        <MaterialTable
+          columns={columns}
+          data={tableData}
+          title="Internship Task"
+          editable={{
+            onRowAdd: (data) =>
+              new Promise((resolve, reject) => {
+                console.log(data);
+                setTableData([...tableData, data]);
+                setTimeout(resolve(), 0);
+              }),
+          }}
+          options={{ actionsColumnIndex: -1, filtering: true }}
+        />
+      ) : (
+        ""
+      )}
     </div>
   );
 }
