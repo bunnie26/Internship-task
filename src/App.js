@@ -3,7 +3,7 @@ import MaterialTable from "material-table";
 import { useEffect, useState } from "react";
 
 function App() {
-  const [tableData, setTableData] = useState("");
+  const [tableData, setTableData] = useState([]);
   console.log(tableData);
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
