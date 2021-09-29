@@ -43,18 +43,28 @@ function App() {
           data={tableData}
           title="Internship Task"
           editable={{
-            onRowAdd: (data) =>
-              new Promise((resolve, reject) => {
-                console.log(data);
-                setTableData([...tableData, data]);
-                setTimeout(resolve(), 0);
-              }),
-         
-            onRowUpdate:(newData,oldData)=>new Promise((resolve,reject)=>{
-              const updatedData = [...tableData]
-              updatedData[oldData.tableData.id]=newData
-              setTableData(updatedData)
-              setTimeout(resolve(), 0);
+            onRowAdd: (data) => fetch("https://jsonplaceholder.typicode.com/users",{
+              method:'POST',
+              body:JSON.stringify(data), 
+              headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+              },
+            }).then((response) => response.json())
+            .then((json) => {
+              setTableData([...tableData, json])
+            })
+            ,
+            onRowUpdate:(newData,oldData)=>fetch(`https://jsonplaceholder.typicode.com/users${oldData.tableData.id}`,{
+              method:'PATCH',
+              body:JSON.stringify(newData), 
+              headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+              },
+            }).then((response) => response.json())
+            .then((json) => {
+              const updatedData = [...tableData];
+              updatedData[oldData.tableData.id]=newData;
+              setTableData(updatedData);
             })
          ,
             onRowDelete:(selectedRow)=> new Promise((resolve,reject)=>{
