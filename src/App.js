@@ -49,8 +49,22 @@ function App() {
                 setTableData([...tableData, data]);
                 setTimeout(resolve(), 0);
               }),
+         
+            onRowUpdate:(newData,oldData)=>new Promise((resolve,reject)=>{
+              const updatedData = [...tableData]
+              updatedData[oldData.tableData.id]=newData
+              setTableData(updatedData)
+              setTimeout(resolve(), 0);
+            })
+         ,
+            onRowDelete:(selectedRow)=> new Promise((resolve,reject)=>{
+              const updatedData = [...tableData]
+              updatedData.splice(selectedRow.tableData.id,1)
+              setTableData(updatedData)
+              setTimeout(resolve(), 0);
+            })
           }}
-          options={{ actionsColumnIndex: -1, filtering: true }}
+          options={{ actionsColumnIndex: -1, filtering: true ,pageSizeOptions:[2,5,10,15,20],paginationType:"steped",showFirstLastPageButtons:false,addRowPosition:"first"}}
         />
       ) : (
         ""
